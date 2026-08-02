@@ -1,4 +1,4 @@
-# Enterprise Multi-Site Network Infrastructure using Cisco Packet Tracer
+# Enterprise-Network-Design-using-OSPF in Cisco Packet Tracer
 
 ![Cisco](https://img.shields.io/badge/Cisco-Packet%20Tracer-blue)
 ![Routing](https://img.shields.io/badge/OSPF-Area%200-green)
@@ -10,7 +10,7 @@
 
 # Project Overview
 
-This project demonstrates the design and implementation of a multi-site enterprise network using Cisco Packet Tracer.
+This project demonstrates the design and implementation of a Enterprise-Network-Design-using-OSPF in Cisco Packet Tracer.
 
 The network consists of a Head Office and a Branch Office connected through a WAN. Internal communication is achieved using OSPF dynamic routing, while Internet connectivity is provided through an Edge Router configured with NAT/PAT.
 
