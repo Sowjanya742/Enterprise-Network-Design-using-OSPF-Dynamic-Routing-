@@ -1,0 +1,183 @@
+============================================================
+Enterprise Multi-Site Network
+============================================================
+
+Device Name : HR-Access-Switch
+Device Type : Cisco Catalyst 2960
+
+Role
+------------------------------------------------------------
+• HR Department Access Switch
+• Provides Layer 2 Connectivity
+• VLAN Segmentation
+• IEEE 802.1Q Trunking
+• Switch Management using VLAN 60
+
+============================================================
+Configuration
+============================================================
+
+version 15.0
+
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+
+hostname HR-Access-Switch
+
+spanning-tree mode pvst
+spanning-tree extend system-id
+
+!
+!===========================================================
+! Trunk Port
+!===========================================================
+!
+
+interface FastEthernet0/1
+ description Trunk-to-Core-Router
+ switchport trunk allowed vlan 10,40,60
+ switchport mode trunk
+
+!
+!===========================================================
+! Access Ports
+!===========================================================
+!
+
+!
+! HR Department PCs
+!
+
+interface FastEthernet0/2
+ description HR-PC-1
+ switchport mode access
+ switchport access vlan 10
+
+interface FastEthernet0/3
+ description HR-PC-2
+ switchport mode access
+ switchport access vlan 10
+
+!
+! DHCP Server
+!
+
+interface FastEthernet0/4
+ description Central-DHCP-Server
+ switchport mode access
+ switchport access vlan 40
+
+!
+! Unused Ports
+!
+
+interface FastEthernet0/5
+ shutdown
+
+interface FastEthernet0/6
+ shutdown
+
+interface FastEthernet0/7
+ shutdown
+
+interface FastEthernet0/8
+ shutdown
+
+interface FastEthernet0/9
+ shutdown
+
+interface FastEthernet0/10
+ shutdown
+
+interface FastEthernet0/11
+ shutdown
+
+interface FastEthernet0/12
+ shutdown
+
+interface FastEthernet0/13
+ shutdown
+
+interface FastEthernet0/14
+ shutdown
+
+interface FastEthernet0/15
+ shutdown
+
+interface FastEthernet0/16
+ shutdown
+
+interface FastEthernet0/17
+ shutdown
+
+interface FastEthernet0/18
+ shutdown
+
+interface FastEthernet0/19
+ shutdown
+
+interface FastEthernet0/20
+ shutdown
+
+interface FastEthernet0/21
+ shutdown
+
+interface FastEthernet0/22
+ shutdown
+
+interface FastEthernet0/23
+ shutdown
+
+interface FastEthernet0/24
+ shutdown
+
+!
+! Gigabit Interfaces
+!
+
+interface GigabitEthernet0/1
+ shutdown
+
+interface GigabitEthernet0/2
+ shutdown
+
+!
+!===========================================================
+! Management Interface
+!===========================================================
+!
+
+interface Vlan1
+ no ip address
+ shutdown
+
+interface Vlan60
+ description Switch-Management
+ ip address 192.168.60.2 255.255.255.0
+
+!
+! Default Gateway
+!
+
+ip default-gateway 192.168.60.1
+
+!
+!===========================================================
+! Console & Remote Access
+!===========================================================
+!
+
+line con 0
+
+line vty 0 4
+ login
+
+line vty 5 15
+ login
+
+end
+
+============================================================
+End of Configuration
+============================================================

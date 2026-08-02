@@ -1,0 +1,186 @@
+============================================================
+Enterprise Multi-Site Network
+============================================================
+
+Device Name : Core-Router
+Device Type : Cisco 2911 Router
+
+Role
+------------------------------------------------------------
+• Enterprise Core Router
+• Performs Inter-VLAN Routing (Router-on-a-Stick)
+• Acts as DHCP Relay Agent
+• Exchanges Routes using OSPF Area 0
+• Uses Static Default Route towards Edge Router
+• Provides Connectivity between Internal Networks
+
+============================================================
+Configuration
+============================================================
+
+version 15.1
+
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+
+hostname Router
+
+!
+! Enable secret removed for public GitHub repository
+!
+
+no ip cef
+no ipv6 cef
+
+!
+!===========================================================
+! WAN Interfaces
+!===========================================================
+!
+
+interface GigabitEthernet0/0
+ description Link-to-Edge-Router
+ ip address 10.0.0.2 255.255.255.252
+ duplex auto
+ speed auto
+
+interface GigabitEthernet0/1
+ description Link-to-Branch-Router
+ ip address 192.168.10.1 255.255.255.252
+ duplex auto
+ speed auto
+
+!
+!===========================================================
+! Router-on-a-Stick Configuration
+!===========================================================
+!
+
+interface GigabitEthernet0/2
+ no ip address
+
+!
+!---------------- VLAN 10 ----------------
+! HR Department
+!
+
+interface GigabitEthernet0/2.10
+ encapsulation dot1Q 10
+ description HR-VLAN
+ ip address 10.16.1.1 255.255.255.248
+ ip helper-address 192.168.40.2
+
+!
+!---------------- VLAN 40 ----------------
+! Server VLAN
+!
+
+interface GigabitEthernet0/2.40
+ encapsulation dot1Q 40
+ description Server-VLAN
+ ip address 192.168.40.1 255.255.255.0
+
+!
+!---------------- VLAN 60 ----------------
+! Management VLAN
+!
+
+interface GigabitEthernet0/2.60
+ encapsulation dot1Q 60
+ description Management-VLAN
+ ip address 192.168.60.1 255.255.255.0
+
+!
+!===========================================================
+! Integrated Switch Ports
+!===========================================================
+!
+
+interface FastEthernet0/0/0
+ switchport mode access
+
+interface FastEthernet0/0/1
+ switchport mode access
+
+interface FastEthernet0/0/2
+ switchport mode access
+
+interface FastEthernet0/0/3
+ switchport mode access
+
+interface Vlan1
+ no ip address
+ shutdown
+
+!
+!===========================================================
+! OSPF Configuration
+!===========================================================
+!
+
+router ospf 1
+
+ router-id 20.20.20.20
+
+ log-adjacency-changes
+
+ !
+ ! Advertise HR VLAN
+ !
+
+ network 10.16.1.0 0.0.0.7 area 0
+
+ !
+ ! Advertise Server VLAN
+ !
+
+ network 192.168.40.0 0.0.0.255 area 0
+
+ !
+ ! Advertise Branch WAN Link
+ !
+
+ network 192.168.10.0 0.0.0.3 area 0
+
+ !
+ ! Advertise Edge WAN Link
+ !
+
+ network 10.0.0.0 0.0.0.3 area 0
+
+!
+!===========================================================
+! Static Default Route
+!===========================================================
+!
+
+!
+! Send all unknown traffic towards
+! the Enterprise Edge Router.
+!
+
+ip route 0.0.0.0 0.0.0.0 10.0.0.1
+
+ip classless
+
+ip flow-export version 9
+
+!
+!===========================================================
+! Console & Remote Access
+!===========================================================
+!
+
+line con 0
+
+line aux 0
+
+line vty 0 4
+ login
+
+end
+
+============================================================
+End of Configuration
+============================================================

@@ -1,0 +1,98 @@
+============================================================
+Enterprise Multi-Site Network
+============================================================
+
+Device Name : Internet
+Device Type : Cisco 2911 Router
+
+Role
+------------------------------------------------------------
+• Simulates the Public Internet
+• Connected to ISP Router
+• Provides Internet Reachability
+• Static Route towards ISP Network
+
+============================================================
+Configuration
+============================================================
+
+version 15.1
+
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+
+hostname Internet
+
+!
+! Enable secret removed for public GitHub repository
+!
+
+ip cef
+no ipv6 cef
+
+!
+!===========================================================
+! Interfaces
+!===========================================================
+!
+
+interface GigabitEthernet0/0
+ description Link-to-ISP
+ ip address 1.1.1.1 255.255.255.252
+ duplex auto
+ speed auto
+
+interface GigabitEthernet0/1
+ no ip address
+ shutdown
+
+interface GigabitEthernet0/2
+ no ip address
+ shutdown
+
+interface Vlan1
+ no ip address
+ shutdown
+
+!
+!===========================================================
+! Routing
+!===========================================================
+!
+
+router rip
+!
+! RIP process kept unused for future scalability.
+!
+
+!
+! Static Route
+! Route traffic destined for the Enterprise Edge network
+! via the ISP router.
+!
+
+ip route 2.2.2.0 255.255.255.252 1.1.1.2
+
+ip classless
+
+ip flow-export version 9
+
+!
+!===========================================================
+! Console & Remote Access
+!===========================================================
+!
+
+line con 0
+
+line aux 0
+
+line vty 0 4
+ login
+
+end
+
+============================================================
+End of Configuration
+============================================================

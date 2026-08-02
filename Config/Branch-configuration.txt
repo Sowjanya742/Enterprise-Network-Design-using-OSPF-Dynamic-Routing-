@@ -1,0 +1,165 @@
+============================================================
+Enterprise Multi-Site Network
+============================================================
+
+Device Name : Branch-Router
+Device Type : Cisco 2911 Router
+
+Role
+------------------------------------------------------------
+• Branch Office Router
+• Performs Inter-VLAN Routing (Router-on-a-Stick)
+• Acts as DHCP Relay Agent
+• Exchanges Routes using OSPF Area 0
+• Uses Static Default Route towards Core Router
+• Connects Branch Users to Enterprise Network
+
+============================================================
+Configuration
+============================================================
+
+version 15.1
+
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+
+hostname Branch-Router
+
+!
+! Enable secret removed for public GitHub repository
+!
+
+ip cef
+no ipv6 cef
+
+!
+!===========================================================
+! WAN Interface
+!===========================================================
+!
+
+interface GigabitEthernet0/0
+ description Link-to-Core-Router
+ ip address 192.168.10.2 255.255.255.252
+ duplex auto
+ speed auto
+
+!
+!===========================================================
+! Router-on-a-Stick Configuration
+!===========================================================
+!
+
+interface GigabitEthernet0/1
+ no ip address
+
+!
+!---------------- VLAN 20 ----------------
+! Branch Users
+!
+
+interface GigabitEthernet0/1.20
+ encapsulation dot1Q 20
+ description Branch-Users-VLAN
+ ip address 172.16.1.1 255.255.255.248
+ ip helper-address 192.168.40.2
+
+!
+!---------------- VLAN 30 ----------------
+! Trainee Users
+!
+
+interface GigabitEthernet0/1.30
+ encapsulation dot1Q 30
+ description Trainee-VLAN
+ ip address 192.168.1.1 255.255.255.248
+ ip helper-address 192.168.40.2
+
+!
+!---------------- VLAN 50 ----------------
+! Branch Management
+!
+
+interface GigabitEthernet0/1.50
+ encapsulation dot1Q 50
+ description Branch-Management-VLAN
+ ip address 192.168.50.1 255.255.255.0
+
+!
+! Unused Interface
+!
+
+interface GigabitEthernet0/2
+ no ip address
+ shutdown
+
+interface Vlan1
+ no ip address
+ shutdown
+
+!
+!===========================================================
+! OSPF Configuration
+!===========================================================
+!
+
+router ospf 1
+
+ router-id 10.10.10.10
+
+ log-adjacency-changes
+
+ !
+ ! Advertise Branch User VLAN
+ !
+
+ network 172.16.1.0 0.0.0.7 area 0
+
+ !
+ ! Advertise Trainee VLAN
+ !
+
+ network 192.168.1.0 0.0.0.7 area 0
+
+ !
+ ! Advertise WAN Link towards Core Router
+ !
+
+ network 192.168.10.0 0.0.0.3 area 0
+
+!
+!===========================================================
+! Static Default Route
+!===========================================================
+!
+
+!
+! Forward all unknown traffic
+! towards the Core Router.
+!
+
+ip route 0.0.0.0 0.0.0.0 10.0.0.1
+
+ip classless
+
+ip flow-export version 9
+
+!
+!===========================================================
+! Console & Remote Access
+!===========================================================
+!
+
+line con 0
+
+line aux 0
+
+line vty 0 4
+ login
+
+end
+
+============================================================
+End of Configuration
+============================================================

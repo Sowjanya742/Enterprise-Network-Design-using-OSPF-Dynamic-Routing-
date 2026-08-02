@@ -1,0 +1,157 @@
+============================================================
+Enterprise Multi-Site Network
+============================================================
+
+Device Name : Edge-Router
+Device Type : Cisco 2911 Router
+
+Role
+------------------------------------------------------------
+• Enterprise WAN Edge Router
+• Connects Enterprise LAN to ISP
+• Performs NAT/PAT (Port Address Translation)
+• Exchanges Internal Routes using OSPF
+• Uses Static Default Route towards ISP
+• Provides Internet Access to Internal Users
+
+============================================================
+Configuration
+============================================================
+
+version 15.1
+
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+
+hostname Edge-Router
+
+!
+! Enable secret removed for public GitHub repository
+!
+
+ip cef
+no ipv6 cef
+
+!
+!===========================================================
+! Interfaces
+!===========================================================
+!
+
+interface GigabitEthernet0/0
+ description Link-to-ISP
+ ip address 2.2.2.2 255.255.255.252
+ ip nat outside
+ duplex auto
+ speed auto
+
+interface GigabitEthernet0/1
+ description Link-to-Core-Router
+ ip address 10.0.0.1 255.255.255.252
+ ip nat inside
+ duplex auto
+ speed auto
+
+interface GigabitEthernet0/2
+ no ip address
+ shutdown
+
+interface Vlan1
+ no ip address
+ shutdown
+
+!
+!===========================================================
+! OSPF Configuration
+!===========================================================
+!
+
+router ospf 1
+ router-id 30.30.30.30
+ log-adjacency-changes
+
+ !
+ ! Advertise only the internal WAN link
+ !
+
+ network 10.0.0.0 0.0.0.3 area 0
+
+!
+!===========================================================
+! NAT / PAT Configuration
+!===========================================================
+!
+
+!
+! Translate all permitted inside networks
+! to the public IP of GigabitEthernet0/0
+!
+
+ip nat inside source list 1 interface GigabitEthernet0/0 overload
+
+!
+!===========================================================
+! Static Default Route
+!===========================================================
+!
+
+!
+! Forward all unknown destinations
+! towards the ISP Router.
+!
+
+ip route 0.0.0.0 0.0.0.0 2.2.2.1
+
+ip classless
+
+ip flow-export version 9
+
+!
+!===========================================================
+! NAT Access Control List
+!===========================================================
+!
+
+!
+! HR VLAN
+!
+
+access-list 1 permit 10.16.1.0 0.0.0.7
+
+!
+! Branch VLAN
+!
+
+access-list 1 permit 172.16.1.0 0.0.0.7
+
+!
+! Trainees VLAN
+!
+
+access-list 1 permit 192.168.1.0 0.0.0.7
+
+!
+! Server VLAN
+!
+
+access-list 1 permit 192.168.40.0 0.0.0.255
+
+!
+!===========================================================
+! Console & Remote Access
+!===========================================================
+!
+
+line con 0
+
+line aux 0
+
+line vty 0 4
+ login
+
+end
+
+============================================================
+End of Configuration
+============================================================
