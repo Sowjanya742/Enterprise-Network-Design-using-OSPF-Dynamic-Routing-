@@ -1,1 +1,280 @@
+# Enterprise-Network-Design-using-OSPF in Cisco Packet Tracer
 
+## Project Report
+
+**Project Title:** Enterprise-Network-Design-using-OSPF in Cisco Packet Tracer
+
+**Developed By:** Sowjanya Peeka
+
+**Simulation Platform:** Cisco Packet Tracer
+
+**Routing Protocol:** OSPF (Area 0)
+
+---
+
+# 1. Introduction
+
+This project demonstrates the design and implementation of a Enterprise-Network-Design-using-OSPF in Cisco Packet Tracer.
+The network consists of a **Head Office** and a **Branch Office** connected through a WAN. Internal communication is established using **OSPF dynamic routing**, while Internet connectivity is provided through an **Edge Router** configured with **NAT/PAT**.
+
+The implementation also includes:
+
+- VLAN Segmentation
+- IEEE 802.1Q Trunking
+- Router-on-a-Stick Inter-VLAN Routing
+- Centralized DHCP Server
+- DHCP Relay (IP Helper Address)
+- Static Default Routing
+- Switch Management VLANs
+
+This project simulates a real enterprise network by integrating routing, switching, addressing, and Internet access into a single topology.
+
+---
+
+# 2. Project Objectives
+
+The objectives of this project are:
+
+- Design a multi-site enterprise network.
+- Implement VLAN-based network segmentation.
+- Configure Router-on-a-Stick Inter-VLAN Routing.
+- Deploy a centralized DHCP Server.
+- Configure DHCP Relay using IP Helper Address.
+- Implement OSPF Area 0 for internal routing.
+- Configure Static Default Routing for Internet access.
+- Configure NAT/PAT on the Edge Router.
+- Configure Management VLANs for switches.
+- Verify end-to-end connectivity across the enterprise network.
+
+---
+
+# 3. Network Topology
+
+The network consists of the following devices:
+
+- Internet Router
+- ISP Router
+- Company Edge Router
+- Core Router
+- Branch Router
+- HR Access Switch
+- Branch Switch
+- DHCP Server
+- HR PCs
+- Branch PCs
+- Trainee Laptops
+
+Internal routing is handled using OSPF, while Internet connectivity is provided through the Edge Router.
+
+---
+
+# 4. IP Addressing Plan
+
+| Network | Purpose |
+|---------|---------|
+| 10.16.1.0/29 | HR Department |
+| 172.16.1.0/29 | Branch Department |
+| 192.168.1.0/29 | Trainee Department |
+| 192.168.40.0/24 | DHCP Server |
+| 192.168.50.0/24 | Branch Switch Management |
+| 192.168.60.0/24 | HR Switch Management |
+| 192.168.10.0/30 | Core Router ↔ Branch Router |
+| 10.0.0.0/30 | Core Router ↔ Edge Router |
+| 2.2.2.0/30 | Edge Router ↔ ISP |
+| 1.1.1.0/30 | ISP ↔ Internet |
+
+---
+
+# 5. VLAN Implementation
+
+The enterprise network is divided into multiple VLANs to separate departments and reduce broadcast domains.
+
+| VLAN | Purpose |
+|------|---------|
+| VLAN 10 | HR Department |
+| VLAN 20 | Branch Users |
+| VLAN 30 | Trainee Users |
+| VLAN 40 | DHCP Server |
+| VLAN 50 | Branch Switch Management |
+| VLAN 60 | HR Switch Management |
+
+IEEE 802.1Q trunk links are configured between routers and switches to carry multiple VLANs over a single physical connection.
+
+---
+
+# 6. Inter-VLAN Routing
+
+Router-on-a-Stick is implemented on both the Core Router and Branch Router.
+
+Each VLAN is assigned a dedicated router subinterface configured with:
+
+- IEEE 802.1Q encapsulation
+- Gateway IP Address
+- DHCP Relay (where required)
+
+This enables communication between devices located in different VLANs.
+
+---
+
+# 7. DHCP Implementation
+
+A dedicated DHCP Server is deployed in **VLAN 40**.
+
+DHCP pools are configured for:
+
+- VLAN 10
+- VLAN 20
+- VLAN 30
+
+Because the DHCP Server is located in a different VLAN, router subinterfaces are configured with **ip helper-address** to forward DHCP requests.
+
+This allows clients in remote VLANs to receive IP addresses automatically.
+
+---
+
+# 8. OSPF Dynamic Routing
+
+OSPF Area 0 is implemented between the Core Router, Branch Router, and Edge Router.
+
+OSPF provides:
+
+- Neighbor Discovery
+- Route Advertisement
+- Dynamic Route Learning
+- Automatic Routing Table Updates
+
+This enables communication between all internal enterprise networks.
+
+---
+
+# 9. Internet Connectivity
+
+Internet access is provided using Static Default Routing.
+
+- Internal routers forward unknown traffic to the Edge Router.
+- The Edge Router forwards traffic to the ISP Router.
+- The ISP Router connects to the simulated Internet Router.
+
+This allows internal hosts to reach external networks.
+
+---
+
+# 10. NAT / PAT Configuration
+
+The Edge Router performs **PAT (Port Address Translation)**.
+
+Configuration includes:
+
+- Inside Interface
+- Outside Interface
+- Standard ACL
+- NAT Overload
+
+PAT allows multiple internal devices to share a single public IP address while accessing external networks.
+
+---
+
+# 11. Switch Management
+
+Dedicated Management VLANs are configured for switch administration.
+
+| Switch | Management VLAN |
+|---------|-----------------|
+| HR Access Switch | VLAN 60 |
+| Branch Switch | VLAN 50 |
+
+Each switch is assigned a management IP address within its respective Management VLAN.
+
+---
+
+# 12. Verification
+
+The following features were successfully verified during implementation.
+
+## DHCP Verification
+
+- DHCP Pool Configuration
+- Automatic IP Address Assignment
+- Default Gateway Assignment
+- DNS Assignment
+
+## OSPF Verification
+
+- Neighbor Adjacency
+- OSPF Database
+- Dynamic Route Learning
+
+## NAT Verification
+
+- NAT Configuration
+- Translation Table
+- NAT Statistics
+
+## Connectivity Verification
+
+- Inter-VLAN Communication
+- Head Office to Branch Communication
+- Internet Connectivity
+- Traceroute to External Network
+
+---
+
+# 13. Skills Demonstrated
+
+This project demonstrates practical knowledge of:
+
+- Enterprise Network Design
+- Cisco Routing and Switching
+- VLAN Configuration
+- IEEE 802.1Q Trunking
+- Router-on-a-Stick
+- Inter-VLAN Routing
+- OSPF
+- Static Routing
+- DHCP
+- DHCP Relay
+- NAT
+- PAT
+- Cisco IOS Configuration
+- Network Verification
+- Network Troubleshooting
+
+---
+
+# 14. Conclusion
+
+This project successfully implements a multi-site enterprise network using Cisco Packet Tracer.
+
+The network provides:
+
+- Secure VLAN segmentation
+- Inter-VLAN communication
+- Centralized DHCP with DHCP Relay
+- Dynamic routing using OSPF
+- Internet connectivity through Static Default Routing
+- NAT/PAT for external communication
+- Dedicated Management VLANs for network administration
+
+The implementation demonstrates practical enterprise networking concepts commonly used in production environments and strengthens hands-on experience with Cisco routing and switching technologies.
+
+---
+
+# Project Deliverables
+
+- Enterprise Network Topology
+- Cisco Packet Tracer Project File
+- Router Configurations
+- Switch Configurations
+- Project Documentation
+- Verification Screenshots
+- GitHub Repository
+
+---
+
+# Developed By
+
+**Sowjanya Peeka**
+
+**Aspiring Network Engineer**
+
+**CCNA Self-Learner**
